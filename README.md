@@ -1,15 +1,24 @@
-# cosmossdk
-Overview
+# Blockchain – Cosmos SDK and Golang
+
+__0 __0 __222
+
+## Overview
+
 Cosmos is a decentralized network of independent blockchains which are powered by the Byzantine Fault Tolerance (BFT) consensus algorithm. The Cosmos SDK enables the creation of these blockchain applications. In this blog post, I would like to share with you some of these Cosmos SDK functions.
 
-The documentation of Cosmos SDK can be found at https://pkg.go.dev/github.com/cosmos/cosmos-sdk.
+The documentation of Cosmos SDK can be found at <https://pkg.go.dev/github.com/cosmos/cosmos-sdk>.
 
 The following code samples were written in Golang and Cosmos SDK v0.45.4.
 
-Code Samples
-Initialize New Keyring
+###
+
+## Code Samples
+
+### Initialize New Keyring
+
 The keyring holds the private/public keypairs used for interactions with a node.
 
+```javascript
 import (
     "strings"
     "github.com/cosmos/cosmos-sdk/crypto/keyring"
@@ -33,11 +42,15 @@ func NewKeyring() (keyring.Keyring, error) {
     }
     return kr, nil
 }
- 
+```
 
-Create Account
+ 
+
+### Create Account
+
 An account designates the private/public keypairs. The public key can be derived to generate various Addresses which are used to identify the users in the blockchain.
 
+```javascript
 import (
     "github.com/cosmos/cosmos-sdk/crypto/keyring"
 )
@@ -64,11 +77,15 @@ func CreateAccount() (string, error) {
 func genUID() string {
 //  Generate a string composed of 40 randomized alphanumeric characters.
 }
- 
+```
 
-Create GRPC Connection
+ 
+
+### Create GRPC Connection
+
 Queries can be performed through a GRPC connection.
 
+```javascript
 import (
     "crypto/tls"
     "google.golang.org/grpc"
@@ -103,11 +120,15 @@ func CreateGrpcConn() (*grpc.ClientConn, error) {
     )
     return grpcConn, err
 }
- 
+```
 
-Get Node Information
+ 
+
+### Get Node Information
+
 Getting the information of a node.
 
+```javascript
 import (
     "github.com/cosmos/cosmos-sdk/client/grpc/tmservice"
     "github.com/tendermint/tendermint/proto/tendermint/p2p"
@@ -131,11 +152,15 @@ func GetNodeInfo() (*p2p.DefaultNodeInfo, error) {
     nodeInfo = nodeInfoRes.GetDefaultNodeInfo()
     return nodeInfo, nil
 }
- 
+```
 
-Get Latest Block
+ 
+
+### Get Latest Block
+
 Getting information of the latest block.
 
+```javascript
 import (
     "context"
     "encoding/base64"
@@ -168,11 +193,15 @@ height := header.GetHeight()
 dataHash := header.GetDataHash()
 blockId := latestBlockRes.GetBlockId() // Type: BlockID
 blockIdHash := base64.StdEncoding.EncodeToString(blockId.GetHash())
- 
+```
 
-Get Block by Height
+ 
+
+### Get Block by Height
+
 Getting the block information by the height.
 
+```abap
 import (
     "context"
     "encoding/base64"
@@ -204,11 +233,15 @@ block := blockRes.GetBlock() // Type: Block
 header := block.GetHeader() // Type: Header
 blockId := blockRes.GetBlockId() // Type: BlockID
 blockIdHash := base64.StdEncoding.EncodeToString(blockId.GetHash())
- 
+```
 
-Get Balance
+ 
+
+### Get Balance
+
 Getting the balance of an account address.
 
+```javascript
 import (
     sdktypes  "github.com/cosmos/cosmos-sdk/types"
     banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
@@ -242,11 +275,15 @@ accountAddress := "……"
 denom := "……"
 balance, err := GetBalance(accountAddress, denom) // Type: Coin
 amount := balance.Amount
- 
+```
 
-Create Transaction
+ 
+
+### Create Transaction
+
 Creating a transaction is a 2-step process. First, a signed transaction is created. Second, the signed transaction is broadcasted.
 
+```javascript
 func createTxn() (string, error) {
     txBytes, err := CreateSignedTxn()
     if err != nil {
@@ -258,11 +295,15 @@ func createTxn() (string, error) {
     }
     return txHash, nil
 }
- 
+```
 
-Create Signed Transaction
+ 
+
+### Create Signed Transaction
+
 The transaction example is to send tokens from account A to account B. For simplicity, some error checking is skipped in the following code snippet.
 
+```javascript
 Import (
                 "github.com/cosmos/cosmos-sdk/client/tx"
                 "github.com/cosmos/cosmos-sdk/crypto"
@@ -342,11 +383,15 @@ func CreateSignedTxn() ([]byte, error) {
     txBytes, err := encodingConfig.TxConfig.TxEncoder()(txBuilder.GetTx())
     return txBytes, nil
 }
- 
+```
 
-Broadcast Signed Transaction
+ 
+
+### Broadcast Signed Transaction
+
 Broadcasting a signed transaction.
 
+```javascript
 import (
     "context"
     "strconv"
@@ -377,11 +422,15 @@ func BroadcastSignedTxn(txBytes []byte) (string, int64, error) {
     }
     return txResponse.TxHash, txResponse.Height, nil
 }
- 
+```
 
-Get Transaction by Hash
+ 
+
+### Get Transaction by Hash
+
 Getting transaction information by the transaction hash.
 
+```javascript
 import (
              "context"
     sdktypes "github.com/cosmos/cosmos-sdk/types"
@@ -411,11 +460,15 @@ func GetTxnByHash(txHash string) (*sdktypes.TxResponse, error) {
 txHash := "……"
 txRes, err := GetTxnByHash(txHash)
 height := txRes.Height
- 
+```
 
-Get Account
+ 
+
+### Get Account
+
 Getting the information of an account.
 
+```javascript
 import (
     "github.com/cosmos/cosmos-sdk/x/auth/types"
 )
@@ -445,11 +498,15 @@ func GetAccount(accountAddress string) (types.BaseAccount, error) {
     }
     return baseAccount, nil
 }
- 
+```
 
-Get Validator Set
+ 
+
+### Get Validator Set
+
 Getting the information of the validator set.
 
+```javascript
 import (
     "github.com/cosmos/cosmos-sdk/x/staking/types"
 )
@@ -471,101 +528,126 @@ func GetValidatorSet() ([]types.Validator, error) {
     validatorList = validatorsRes.GetValidators()
     return validatorList, nil
 }
- 
+```
 
-Type Structs
-Type: Block
+ 
+
+## Type Structs
+
+### Type: Block
+
 Block defines the atomic unit of a Tendermint blockchain.
 
 The structure of type Block is defined as:
 
+```javascript
 type Block struct {
     Header `json:"header"`
     ……
 }
+```
+
 For details, see:
 
-https://pkg.go.dev/github.com/tendermint/tendermint@v0.34.19/types#Block
+<https://pkg.go.dev/github.com/tendermint/tendermint@v0.34.19/types#Block>
 
-https://github.com/tendermint/tendermint/blob/v0.34.19/proto/tendermint/types/block.pb.go
+<https://github.com/tendermint/tendermint/blob/v0.34.19/proto/tendermint/types/block.pb.go>
 
- 
+ 
 
-Type: BlockID
+### Type: BlockID
+
 The structure of type BlockID is defined as:
 
+```javascript
 type BlockID struct {
     Hash tmbytes.HexBytes `json:"hash"`
     ……
 }
+```
+
 For details, see:
 
-https://pkg.go.dev/github.com/tendermint/tendermint@v0.34.19/types#BlockID
+<https://pkg.go.dev/github.com/tendermint/tendermint@v0.34.19/types#BlockID>
 
-https://github.com/tendermint/tendermint/blob/v0.34.19/proto/tendermint/types/types.pb.go
+<https://github.com/tendermint/tendermint/blob/v0.34.19/proto/tendermint/types/types.pb.go>
 
- 
+ 
 
-Type: Coin
+### Type: Coin
+
 Coin defines a token with a denomination and an amount.
 
 The structure of type Coin is defined as:
 
+```javascript
 type Coin struct {
     Denom  string `json:"denom,omitempty"`
     Amount Int    `json:"amount"`
 }
+```
+
 For details, see:
 
-https://pkg.go.dev/github.com/cosmos/cosmos-sdk@v0.45.4/types#Coin
+<https://pkg.go.dev/github.com/cosmos/cosmos-sdk@v0.45.4/types#Coin>
 
-https://github.com/cosmos/cosmos-sdk/blob/v0.45.4/types/coin.pb.go
+<https://github.com/cosmos/cosmos-sdk/blob/v0.45.4/types/coin.pb.go>
 
- 
+ 
 
-Type: Header
+### Type: Header
+
 Header defines the structure of a Tendermint block header.
 
 The structure of type Header is defined as:
 
+```javascript
 type Header struct {
     Height   int64            `json:"height"`
     DataHash tmbytes.HexBytes `json:"data_hash"`
     ……
 }
+```
+
 For details, see:
 
-https://pkg.go.dev/github.com/tendermint/tendermint@v0.34.19/types#Header
+<https://pkg.go.dev/github.com/tendermint/tendermint@v0.34.19/types#Header>
 
-https://github.com/tendermint/tendermint/blob/v0.34.19/proto/tendermint/types/types.pb.go
+<https://github.com/tendermint/tendermint/blob/v0.34.19/proto/tendermint/types/types.pb.go>
 
- 
+ 
 
-Type: QueryBalanceRequest
+### Type: QueryBalanceRequest
+
 The structure of type QueryBalanceRequest is defined as:
 
+```javascript
 type QueryBalanceRequest struct {
     Address string `json:"address,omitempty"`
     Denom   string `json:"denom,omitempty"`
 }
+```
+
 For details, see:
 
-https://pkg.go.dev/github.com/cosmos/cosmos-sdk@v0.45.4/x/bank/types#QueryBalanceRequest
+<https://pkg.go.dev/github.com/cosmos/cosmos-sdk@v0.45.4/x/bank/types#QueryBalanceRequest>
 
-https://github.com/cosmos/cosmos-sdk/blob/v0.45.4/x/bank/types/query.pb.go
+<https://github.com/cosmos/cosmos-sdk/blob/v0.45.4/x/bank/types/query.pb.go>
 
- 
+ 
 
-Type: QueryBalanceResponse
+### Type: QueryBalanceResponse
+
 The structure of type QueryBalanceResponse is defined as:
 
+```javascript
 type QueryBalanceResponse struct {
     Balance *types.Coin `json:"balance,omitempty"`
 }
+```
+
 For details, see:
 
-https://pkg.go.dev/github.com/cosmos/cosmos-sdk@v0.45.4/x/bank/types#QueryBalanceResponse
+<https://pkg.go.dev/github.com/cosmos/cosmos-sdk@v0.45.4/x/bank/types#QueryBalanceResponse>
 
-https://github.com/cosmos/cosmos-sdk/blob/v0.45.4/x/bank/types/query.pb.go
-
- 
+<https://github.com/cosmos/cosmos-sdk/blob/v0.45.4/x/bank/types/query.pb.go>
